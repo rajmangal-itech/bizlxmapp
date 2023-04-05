@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Inter'
       ),
-      debugShowCheckedModeBanner: false,
+     
       // home: VideoPlayerApp(),
       // home:SearchBar(),
       // home: HeadersApp(),

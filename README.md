@@ -1,4 +1,4 @@
-# bizlx_mobile_app
+# bizlx_app
 
 A new Flutter project.
 

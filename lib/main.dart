@@ -1,66 +1,102 @@
-import 'package:bizlx_mobile_app/_widgets/grid_Widget.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Alljobview/all_jobs.dart';
-import 'package:bizlx_mobile_app/screens/bottom_bar.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Categoryallview/categories_all.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Citydeals/city_deals.dart';
-import 'package:bizlx_mobile_app/screens/Ui/homeview/home_screen.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Hoteldealview/hotel_deal_display.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Hotelscreenview/hotel_screen.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Infoscreenview/info_screens.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Jobdescriptionview/job_descriptions.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Jobsearchview/job_search.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Jobinfodetailsview/job_info_details.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Notificationview/notifications.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Review_screen_view/review_screen2.dart';
-import 'package:bizlx_mobile_app/screens/Ui/Wishlistview/wishlist_page.dart';
-import 'package:bizlx_mobile_app/utills/app_bar_header.dart';
-import 'package:bizlx_mobile_app/utills/headers_app.dart';
-import 'package:bizlx_mobile_app/utills/search_bar.dart';
-import 'package:flutter/material.dart';
+import 'package:bizlx_app/common/bottom_bar.dart';
+import 'package:bizlx_app/constants/global_variables.dart';
+import 'package:bizlx_app/providers/user_provider.dart';
+import 'package:bizlx_app/router.dart';
+import 'package:bizlx_app/views/all_account_city/screens/all_account_city.dart';
+import 'package:bizlx_app/views/all_accounts_jobs/screens/all_accounts_jobs.dart';
+import 'package:bizlx_app/views/all_categories/screen/all_categories.dart';
+import 'package:bizlx_app/views/all_jobs/screen/all_jobs.dart';
+import 'package:bizlx_app/views/auth/screens/auth_screen.dart';
+import 'package:bizlx_app/views/auth/services/auth_service.dart';
+import 'package:bizlx_app/views/deals_screen/screen/deal_screen_one.dart';
+import 'package:bizlx_app/views/deals_screen/screen/deal_screen_two.dart';
+import 'package:bizlx_app/views/deals_screen/screen/deal_screen_video.dart';
 
-import 'screens/Ui/ListingProfile/listing_profile_list_screen.dart';
+import 'package:bizlx_app/views/hotel_deal_display/screen/hotel_deal_display.dart';
+import 'package:bizlx_app/views/job_inner_page/screen/job_inner_page.dart';
+import 'package:bizlx_app/views/listing_profile/screens/listing_profile_screen.dart';
+import 'package:bizlx_app/views/notification/screen/notifications.dart';
+import 'package:bizlx_app/views/review/screen/review_form.dart';
+import 'package:bizlx_app/views/review/screen/review_screen.dart';
+import 'package:bizlx_app/views/wishlist/screen/wishlist_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  final AuthService authService = AuthService();
+  @override
+  void initState() {
+    super.initState();
+    authService.getUserData(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Inter'
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        ClampingScrollWrapper.builder(context, widget!),
+        breakpoints: const [
+          ResponsiveBreakpoint.resize(350, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(600, name: TABLET),
+          ResponsiveBreakpoint.resize(800, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(1700, name: 'XL'),
+        ],
       ),
-     
-      // home: VideoPlayerApp(),
-      // home:SearchBar(),
-      // home: HeadersApp(),
-      // home: const BottomBar(),
-      // home: HomeScreen(),
-      // home: HotelScreen(),
-      // home: CityDeals(),
-      // home: InfoScreens(),
-      home: ListingProfile(),
-      // home: JobSearch(),
-      // home:JobInfoDetails()
-      // home: AllJobs(),
-      // home: JobDescriptions(),
-      // home: WishlistPage(),
-      /*---------------------*/
-      // home:CategoriesAll()
-      // home: HotelDealDisplay(),
-      // home:DealDisplay()
-      // home: DealsScreen(),
-      // home: DealsScreen2(),
-      // home: DealDisplay2(),
-      // home: ReviewScreen(),[
-      // home: ReviewScreen2(),
-      // home: Notifications(),
+
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: const ColorScheme.light(
+          primary: GlobalVariables.backgroundColor,
+        ),
+      ),
+      onGenerateRoute: ((settings) => generateRoute(settings)),
+      //FOR API INTEGRATE
+      // home: Scaffold(
+      //   body: Provider.of<UserProvider>(context).user.token.isNotEmpty
+      //       ? const BottomBar()
+      //       : const AuthScreen(),
+      // ),
+
+      //ONE BY ONE SCREEN CREATED
+      //BY PASS
+      home: const Scaffold(
+        // body: BottomBar(),
+        // body: ListingProfileScreen(),
+        // body: AllAccountJobs(),
+        // body: AllAccountCity(),
+        body: AllJobs(),
+        // body: JobInnerPage(),
+        // body: Wishlist(),
+        // body: AllCategories(),
+        // body: HotelDealDisplay(),
+        // body: DealScreenOne(),
+        // body: DealScreenTwo(),
+        // body: DealScreenVideo(),
+        // body: ReviewScreen(),
+        // body: ReviewForm(),
+        // body: Notifications(),
+      ),
     );
   }
 }
